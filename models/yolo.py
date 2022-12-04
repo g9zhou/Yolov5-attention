@@ -21,6 +21,7 @@ if str(ROOT) not in sys.path:
 if platform.system() != 'Windows':
     ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
+from models.attention import *
 from models.common import *
 from models.experimental import *
 from utils.autoanchor import check_anchor_order

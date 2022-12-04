@@ -1,0 +1,141 @@
+# YOLOv5 🚀 by Ultralytics, GPL-3.0 license
+# COCO128-seg dataset https://www.kaggle.com/ultralytics/coco128 (first 128 images from COCO train2017) by Ultralytics
+# Example usage: python train.py --data coco128.yaml
+# parent
+# ├── yolov5
+# └── datasets
+#     └── coco128-seg  ← downloads here (7 MB)
+
+
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+path: ../stanford_dogset  # dataset root dir
+train: images/train  # train images (relative to 'path') 128 images
+val: images/train  # val images (relative to 'path') 128 images
+test: images/test # test images (optional)
+
+# Classes
+names:
+  0: silky_terrier
+  1: Scottish_deerhound
+  2: Chesapeake_Bay_retriever
+  3: Ibizan_hound
+  4: wire-haired_fox_terrier
+  5: Saluki
+  6: cocker_spaniel
+  7: schipperke
+  8: borzoi
+  9: Pembroke
+  10: komondor
+  11: Staffordshire_bullterrier
+  12: standard_poodle
+  13: Eskimo_dog
+  14: English_foxhound
+  15: golden_retriever
+  16: Sealyham_terrier
+  17: Japanese_spaniel
+  18: miniature_schnauzer
+  19: malamute
+  20: malinois
+  21: Pekinese
+  22: giant_schnauzer
+  23: Mexican_hairless
+  24: Doberman
+  25: standard_schnauzer
+  26: dhole
+  27: German_shepherd
+  28: Bouvier_des_Flandres
+  29: Siberian_husky
+  30: Norwich_terrier
+  31: Irish_terrier
+  32: Norfolk_terrier
+  33: Saint_Bernard
+  34: Border_terrier
+  35: briard
+  36: Tibetan_mastiff
+  37: bull_mastiff
+  38: Maltese_dog
+  39: Kerry_blue_terrier
+  40: kuvasz
+  41: Greater_Swiss_Mountain_dog
+  42: Lakeland_terrier
+  43: Blenheim_spaniel
+  44: basset
+  45: West_Highland_white_terrier
+  46: Chihuahua
+  47: Border_collie
+  48: redbone
+  49: Irish_wolfhound
+  50: bluetick
+  51: miniature_poodle
+  52: Cardigan
+  53: EntleBucher
+  54: Norwegian_elkhound
+  55: German_short-haired_pointer
+  56: Bernese_mountain_dog
+  57: papillon
+  58: Tibetan_terrier
+  59: Gordon_setter
+  60: American_Staffordshire_terrier
+  61: vizsla
+  62: kelpie
+  63: Weimaraner
+  64: miniature_pinscher
+  65: boxer
+  66: chow
+  67: Old_English_sheepdog
+  68: pug
+  69: Rhodesian_ridgeback
+  70: Scotch_terrier
+  71: Shih-Tzu
+  72: affenpinscher
+  73: whippet
+  74: Sussex_spaniel
+  75: otterhound
+  76: flat-coated_retriever
+  77: English_setter
+  78: Italian_greyhound
+  79: Labrador_retriever
+  80: collie
+  81: cairn
+  82: Rottweiler
+  83: Australian_terrier
+  84: toy_terrier
+  85: Shetland_sheepdog
+  86: African_hunting_dog
+  87: Newfoundland
+  88: Walker_hound
+  89: Lhasa
+  90: beagle
+  91: Samoyed
+  92: Great_Dane
+  93: Airedale
+  94: bloodhound
+  95: Irish_setter
+  96: keeshond
+  97: Dandie_Dinmont
+  98: basenji
+  99: Bedlington_terrier
+  100: Appenzeller
+  101: clumber
+  102: toy_poodle
+  103: Great_Pyrenees
+  104: English_springer
+  105: Afghan_hound
+  106: Brittany_spaniel
+  107: Welsh_springer_spaniel
+  108: Boston_bull
+  109: dingo
+  110: soft-coated_wheaten_terrier
+  111: curly-coated_retriever
+  112: French_bulldog
+  113: Irish_water_spaniel
+  114: Pomeranian
+  115: Brabancon_griffon
+  116: Yorkshire_terrier
+  117: groenendael
+  118: Leonberg
+  119: black-and-tan_coonhound
+
+
+# Download script/URL (optional)
+download: http://vision.stanford.edu/aditya86/ImageNetDogs/main.html
