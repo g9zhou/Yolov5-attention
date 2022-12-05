@@ -65,7 +65,7 @@ class C3Attention(nn.Module):
         self.cv1 = Conv(in_dim, hidden, 1, 1)
         self.cv2 = Conv(in_dim, hidden, 1, 1)
         self.cv3 = Conv(2*hidden, out_dim, 1)
-        self.m = nn.Sequential(*(AttentionBlock(hidden, hidden, shortcut, g, e=1.0)for _ in range(n)))
+        self.m = AttentionBlock(hidden, hidden, shortcut, g, e=1.0)
 
     def forward(self,x):
         return self.cv3(torch.cat((self.m(self.cv1(x)), self.cv2(x)), 1))
