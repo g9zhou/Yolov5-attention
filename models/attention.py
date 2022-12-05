@@ -36,7 +36,7 @@ class AttentionBlock(nn.Module):
         if (in_dim != out_dim):
             self.conv = Conv(in_dim, out_dim)
         self.linear = nn.Linear(in_dim,out_dim)
-        self.block = nn.Sequential(*(MultiHeadSelfAttention(in_dim) for _ in range(num_layer)))
+        self.block = nn.Sequential(*(MultiHeadSelfAttention(in_dim,'relu') for _ in range(num_layer)))
         self.out = out_dim
 
     def forward(self, x):
