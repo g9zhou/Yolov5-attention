@@ -32,13 +32,19 @@ class MultiHeadSelfAttention(nn.Module):
 class AttentionBlock(nn.Module):
     def __init__(self, in_dim, out_dim, num_layer):
         super().__init__()
-        self.conv = nn.Conv2d(in_dim, in_dim)
+        self.conv = None
+        if (in_dim != out_dim):
+            self.conv = Conv(in_dim, out_dim)
+        self.linear = nn.Linear(in_dim,out_dim)
         self.block = nn.Sequential(*(MultiHeadSelfAttention(in_dim,'relu') for _ in range(num_layer)))
         self.out = out_dim
 
     def forward(self, x):
+        if self.conv is not None:
+            x = self.conv(x)
         b, _, w, h = x.shape
-        return self.block(x + self.conv(x)).reshape(b, self.out, w, h)
+        p = x.flatten(2).permute(2,0,1)
+        return self.block((p + self.linear(p)).permute(1,2,0).reshape(b, self.out, w, h))
 
 
 # class BottleneckAttention(nn.Module):
