@@ -31,7 +31,7 @@ class MultiHeadSelfAttention(nn.Module):
 
 class AttentionBlock(nn.Module):
     def __init__(self, in_dim, out_dim, num_layer):
-        super().__init()
+        super().__init__()
         self.conv = None
         if (in_dim != out_dim):
             self.conv = Conv(in_dim, out_dim)
