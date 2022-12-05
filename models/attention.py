@@ -47,16 +47,16 @@ class AttentionBlock(nn.Module):
         return self.block(p + self.linear(p)).permute(1,2,0).reshape(b, self.out, w, h)
 
 
-class BottleneckAttention(nn.Module):
-    def __init__(self, in_dim, out_dim, shortcut=True, g=1, e=0.5):
-        super().__init__()
-        hidden = int(out_dim*e)
-        self.cv1 = Conv(in_dim, hidden, 1, 1)
-        self.cv2 = Conv(hidden, out_dim, 3, 1, g=g)
-        self.add = shortcut and in_dim==out_dim
+# class BottleneckAttention(nn.Module):
+#     def __init__(self, in_dim, out_dim, shortcut=True, g=1, e=0.5):
+#         super().__init__()
+#         hidden = int(out_dim*e)
+#         self.cv1 = Conv(in_dim, hidden, 1, 1)
+#         self.cv2 = Conv(hidden, out_dim, 3, 1, g=g)
+#         self.add = shortcut and in_dim==out_dim
 
-    def forward(self, x):
-        return x + self.cv2(self.cv1(x)) if self.add else self.cv2(self.cv1(x))
+#     def forward(self, x):
+#         return x + self.cv2(self.cv1(x)) if self.add else self.cv2(self.cv1(x))
 
 class C3Attention(nn.Module):
     def __init__(self, in_dim, out_dim, n=1, shortcut=True, g=1, e=0.5):
@@ -65,7 +65,7 @@ class C3Attention(nn.Module):
         self.cv1 = Conv(in_dim, hidden, 1, 1)
         self.cv2 = Conv(in_dim, hidden, 1, 1)
         self.cv3 = Conv(2*hidden, out_dim, 1)
-        self.m = nn.Sequential(*(BottleneckAttention(hidden, hidden, shortcut, g, e=1.0)for _ in range(n)))
+        self.m = nn.Sequential(*(AttentionBlock(hidden, hidden, shortcut, g, e=1.0)for _ in range(n)))
 
     def forward(self,x):
         return self.cv3(torch.cat((self.m(self.cv1(x)), self.cv2(x)), 1))
