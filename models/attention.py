@@ -2,9 +2,9 @@ import torch
 from torch import nn
 from models.common import *
 
-class MultiHeadSelfAttention(nn.Module):
+class SelfAttention(nn.Module):
     def __init__(self, in_dim, act):
-        super(MultiHeadSelfAttention,self).__init__()
+        super(SelfAttention,self).__init__()
         self.chanel_in = in_dim
         self.act = act
         
@@ -36,7 +36,7 @@ class AttentionBlock(nn.Module):
         if (in_dim != out_dim):
             self.conv = Conv(in_dim, out_dim)
         self.linear = nn.Linear(in_dim,out_dim)
-        self.block = nn.Sequential(*(MultiHeadSelfAttention(in_dim,'relu') for _ in range(num_layer)))
+        self.block = nn.Sequential(*(SelfAttention(in_dim,'relu') for _ in range(num_layer)))
         self.out = out_dim
 
     def forward(self, x):
@@ -47,7 +47,7 @@ class AttentionBlock(nn.Module):
         return self.block((p + self.linear(p)).permute(1,2,0).reshape(b, self.out, w, h))
 
 
-class C3Attention(nn.Module):
+class C3SA(nn.Module):
     def __init__(self, in_dim, out_dim, n=1, shortcut=True, g=1, e=0.5):
         super().__init__()
         hidden = int(out_dim*e)
