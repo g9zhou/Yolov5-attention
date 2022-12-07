@@ -1,3 +1,5 @@
 # Yolov5-attention
 
-This is adapted from https://github.com/ultralytics/yolov5
+Adapted from https://github.com/ultralytics/yolov5
+
+Training results are in runs/train
