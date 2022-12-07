@@ -908,7 +908,7 @@ def non_max_suppression(
     bs = prediction.shape[0]  # batch size
     nc = prediction.shape[2] - nm - 5  # number of classes
     xc = prediction[..., 4] > conf_thres  # candidates
-
+    
     # Checks
     assert 0 <= conf_thres <= 1, f'Invalid Confidence threshold {conf_thres}, valid values are between 0.0 and 1.0'
     assert 0 <= iou_thres <= 1, f'Invalid IoU {iou_thres}, valid values are between 0.0 and 1.0'
@@ -974,7 +974,6 @@ def non_max_suppression(
             x = x[x[:, 4].argsort(descending=True)[:max_nms]]  # sort by confidence
         else:
             x = x[x[:, 4].argsort(descending=True)]  # sort by confidence
-
         # Batched NMS
         c = x[:, 5:6] * (0 if agnostic else max_wh)  # classes
         boxes, scores = x[:, :4] + c, x[:, 4]  # boxes (offset by class), scores
@@ -995,7 +994,7 @@ def non_max_suppression(
         if (time.time() - t) > time_limit:
             LOGGER.warning(f'WARNING ⚠️ NMS time limit {time_limit:.3f}s exceeded')
             break  # time limit exceeded
-
+    print(output[0][:,5])
     return output
 
 

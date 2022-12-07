@@ -124,6 +124,7 @@ def run(
         plots=True,
         callbacks=Callbacks(),
         compute_loss=None,
+        ktopk = 3,
 ):
     # Initialize/load model and set device
     training = model is not None
@@ -182,12 +183,13 @@ def run(
                                        prefix=colorstr(f'{task}: '))[0]
 
     seen = 0
+    topk = 0
     confusion_matrix = ConfusionMatrix(nc=nc)
     names = model.names if hasattr(model, 'names') else model.module.names  # get class names
     if isinstance(names, (list, tuple)):  # old format
         names = dict(enumerate(names))
     class_map = coco80_to_coco91_class() if is_coco else list(range(1000))
-    s = ('%22s' + '%11s' * 6) % ('Class', 'Images', 'Instances', 'P', 'R', 'mAP50', 'mAP50-95')
+    s = ('%22s' + '%11s' * 7) % ('Class', 'Images', 'Instances', 'P', 'R', 'mAP50', 'mAP50-95', 'topK')
     tp, fp, p, r, f1, mp, mr, map50, ap50, map = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
     dt = Profile(), Profile(), Profile()  # profiling times
     loss = torch.zeros(3, device=device)
@@ -255,6 +257,17 @@ def run(
                     confusion_matrix.process_batch(predn, labelsn)
             stats.append((correct, pred[:, 4], pred[:, 5], labels[:, 0]))  # (correct, conf, pcls, tcls)
 
+            # compute topk
+            possible_preds = pred[:,5]
+            correct_labels = labels[:,0]
+            num_boxes = len(correct_labels)
+            for i in range(num_boxes):
+                for j in range(ktopk):
+                    if j*num_boxes+i >= len(possible_preds): continue
+                    if possible_preds[j*num_boxes+i] == correct_labels[i]:
+                        topk += 1
+                        break
+
             # Save/log
             if save_txt:
                 save_one_txt(predn, save_conf, shape, file=save_dir / 'labels' / f'{path.stem}.txt')
@@ -279,7 +292,8 @@ def run(
 
     # Print results
     pf = '%22s' + '%11i' * 2 + '%11.3g' * 4  # print format
-    LOGGER.info(pf % ('all', seen, nt.sum(), mp, mr, map50, map))
+    pf_topk = '%22s' + '%11i' * 2 + '%11.3g' * 5
+    LOGGER.info(pf_topk % ('all', seen, nt.sum(), mp, mr, map50, map, topk/seen))
     if nt.sum() == 0:
         LOGGER.warning(f'WARNING ⚠️ no labels found in {task} set, can not compute metrics without labels')
 
@@ -360,6 +374,7 @@ def parse_opt():
     parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
     parser.add_argument('--half', action='store_true', help='use FP16 half-precision inference')
     parser.add_argument('--dnn', action='store_true', help='use OpenCV DNN for ONNX inference')
+    parser.add_argument('--ktopk', type=int, default=3, help='top k value')
     opt = parser.parse_args()
     opt.data = check_yaml(opt.data)  # check YAML
     opt.save_json |= opt.data.endswith('coco.yaml')
