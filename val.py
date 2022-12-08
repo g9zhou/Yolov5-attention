@@ -184,6 +184,7 @@ def run(
 
     seen = 0
     topk = 0
+    topk_seen = 0
     confusion_matrix = ConfusionMatrix(nc=nc)
     names = model.names if hasattr(model, 'names') else model.module.names  # get class names
     if isinstance(names, (list, tuple)):  # old format
@@ -262,6 +263,7 @@ def run(
             correct_labels = labels[:,0]
             num_boxes = len(correct_labels)
             for i in range(num_boxes):
+                topk_seen += 1
                 for j in range(ktopk):
                     if j*num_boxes+i >= len(possible_preds): continue
                     if possible_preds[j*num_boxes+i] == correct_labels[i]:
@@ -293,7 +295,7 @@ def run(
     # Print results
     pf = '%22s' + '%11i' * 2 + '%11.3g' * 4  # print format
     pf_topk = '%22s' + '%11i' * 2 + '%11.3g' * 5
-    LOGGER.info(pf_topk % ('all', seen, nt.sum(), mp, mr, map50, map, topk/seen))
+    LOGGER.info(pf_topk % ('all', seen, nt.sum(), mp, mr, map50, map, topk/topk_seen))
     if nt.sum() == 0:
         LOGGER.warning(f'WARNING ⚠️ no labels found in {task} set, can not compute metrics without labels')
 
